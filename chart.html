@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JS in (near) Space</title>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/canvasjs.min.js"></script>
+    <script src="flight-data.js"></script>
+  </head>
+  <body>
+    <div id="xChart" style="height: 200px; width:100%;"></div>
+    <div id="yChart" style="height: 200px; width:100%;"></div>
+    <div id="zChart" style="height: 200px; width:100%;"></div>
+    <div id="tempChart" style="height: 200px; width:100%;"></div>
+    <script>
+
+    var xData = []; // dataPoints
+		var xChart = new CanvasJS.Chart("xChart",{
+			title :{ text: "Acceleromter X" },
+			data: [{ type: "line", dataPoints: xData }]
+		});
+    var yData = []; // dataPoints
+    var yChart = new CanvasJS.Chart("yChart",{
+      title :{ text: "Acceleromter Y" },
+      data: [{ type: "line", dataPoints: yData }]
+    });
+    var zData = []; // dataPoints
+    var zChart = new CanvasJS.Chart("zChart",{
+      title :{ text: "Acceleromter Z" },
+      data: [{ type: "line", dataPoints: zData }]
+    });
+
+    var dataLength = 100;
+    var count = 0;
+    setInterval(function() {
+      var data = flightData[ count++ ];
+      if ( data ) {
+        xData.push({ x: count/2, y: data.accel.x });
+        if ( xData.length > dataLength ) { xData.shift(); }
+
+        yData.push({ x: count/2, y: data.accel.y });
+        if ( yData.length > dataLength ) { yData.shift(); }
+
+        zData.push({ x: count/2, y: data.accel.z });
+        if ( zData.length > dataLength ) { zData.shift(); }
+
+        xChart.render();
+        yChart.render();
+        zChart.render();
+      }
+    }, 500);
+    </script>
+  </body>
+</html>
